@@ -1,0 +1,73 @@
+From a2a011e2122d92c7e89021f8fa6649d3f0645a51 Mon Sep 17 00:00:00 2001
+From: "Mads D. Kristensen" <madsdk@gmail.com>
+Date: Wed, 6 Jun 2012 10:31:35 +0200
+Subject: [PATCH] Added a pre-create event that is emitted before a new
+ document is created.
+
+---
+ src/server/model.coffee |   49 ++++++++++++++++++++++++++++-------------------
+ 1 file changed, 29 insertions(+), 20 deletions(-)
+
+diff --git a/src/server/model.coffee b/src/server/model.coffee
+index 284d6fd..ab47a95 100644
+--- a/src/server/model.coffee
++++ b/src/server/model.coffee
+@@ -377,26 +377,35 @@ module.exports = Model = (db, options) ->
+     type = types[type] if typeof type == 'string'
+     return callback? 'Type not found' unless type
+ 
+-    data =
+-      snapshot:type.create()
+-      type:type.name
+-      meta:meta or {}
+-      v:0
+-
+-    done = (error, dbMeta) ->
+-      # dbMeta can be used to cache extra state needed by the database to access the document, like an ID or something.
+-      return callback? error if error
+-
+-      # From here on we'll store the object version of the type name.
+-      data.type = type
+-      add docName, null, data, 0, [], dbMeta
+-      model.emit 'create', docName, data
+-      callback?()
+-
+-    if db
+-      db.create docName, data, done
+-    else
+-      done()
++    # Emit the 'pre-create' event to allow for preloading data into the new document.
++    model.emit 'pre-create', docName, (error, preloadData) ->
++      return callback? 'Error preloading data:' + error if error
++      snapshotData = null
++      if preloadData
++        snapshotData = preloadData
++      else
++        snapshotData = type.create()
++
++      data =
++        snapshot:snapshotData
++        type:type.name
++        meta:meta or {}
++        v:0
++
++      done = (error, dbMeta) ->
++        # dbMeta can be used to cache extra state needed by the database to access the document, like an ID or something.
++        return callback? error if error
++
++        # From here on we'll store the object version of the type name.
++        data.type = type
++        add docName, null, data, 0, [], dbMeta
++        model.emit 'create', docName, data
++        callback?()
++
++      if db
++        db.create docName, data, done
++      else
++        done()
+ 
+   # Perminantly deletes the specified document.
+   # If listeners are attached, they are removed.
+-- 
+1.7.10
+

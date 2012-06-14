@@ -1,0 +1,28 @@
+From 7eae8fd71069cffec663cec052ad6efa8fd0b8e6 Mon Sep 17 00:00:00 2001
+From: "Mads D. Kristensen" <madsdk@gmail.com>
+Date: Tue, 12 Jun 2012 10:54:26 +0200
+Subject: [PATCH] Changed the path to the closure-library. Now the DEVELDIR
+ env var must be used.
+
+---
+ Makefile |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 0d55e31..5bbab6d 100644
+--- a/Makefile
++++ b/Makefile
+@@ -15,8 +15,8 @@
+ 
+ .PHONY: clean, all
+ 
+-CLOSURE_DIR = ../closure-library
+-CLOSURE_COMPILER = ../closure-library/compiler.jar
++CLOSURE_DIR = $(DEVELDIR)/closure-library
++CLOSURE_COMPILER = $(CLOSURE_DIR)/compiler.jar
+ 
+ CLOSURE_BUILDER = $(CLOSURE_DIR)/closure/bin/build/closurebuilder.py
+ 
+-- 
+1.7.10
+

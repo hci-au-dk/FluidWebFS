@@ -1,0 +1,19 @@
+<html>
+<body>
+<script language="javascript" src="/channel/bcsocket.js"></script>
+<script language="javascript" src="/share/share.js"></script>
+<script language="javascript" src="/share/json.js"></script>
+<script language="javascript">
+document.write("mojn");
+sharejs.open('madsdk+test', 'text', 'http://' + window.location.hostname + ':8001/channel', function(error, doc) {
+if (error) {
+console.log(error);
+document.write("error");
+}
+else {
+document.write(doc.snapshot);
+}
+  });
+</script>
+</body>
+</html>
