@@ -44,32 +44,26 @@ There are also two other system dependencies: CouchDB and Redis. These can be in
 
 ### The hard part
 
-Some dependencies must be built from source. This goes e.g., for Share.js. In the following is shown how to fetch the most recent version of Share.js - in our tests the latest commit was:
+#### Installing ShareJS
 
-    commit 745ee1f49e051ae2aa62c2f30ec8d8e05ecabb21
-    Merge: 57aede0 3d92362
-    Author: Joseph Gentle <josephg@gmail.com>
-    Date:   Mon May 21 20:57:50 2012 -0700
-
-To fetch and build Share.js do this:
+Some dependencies must be built from source. This goes e.g., for Share.js.
 
     cd $DEVELDIR/FluidWebFS/node_modules
-    git clone https://github.com/josephg/ShareJS.git share
+    git clone https://github.com/hci-au-dk/ShareJS.git share
     cd share
     npm install redis
     sudo npm link
     cake build
     cake webclient
 
-Now that we have built Share.js we need to do two modifications: 1) we need to apply our own patch to the Share.js server, and 2) we must replace its browserchannel dependency.
-
-    cd $DEVELDIR/FluidWebFS/node_modules/share
-    git apply $DEVELDIR/FluidWebFS/docs/installation/pre-create-event.patch
-
+Now that we have built Share.js we need to modify its browserchannel dependency.
 
     cd $DEVELDIR/FluidWebFS/node_modules/share/node_modules
     rm -rf browserchannel
-    git clone https://github.com/josephg/node-browserchannel.git browserchannel
+    git clone https://github.com/hci-au-dk/node-browserchannel.git browserchannel
+
+The above should do the trick, but if it doesn't work you may have to apply some more patches (these should be included in what you just checked out, but the following patching process is kept here for reference if an error occurs).
+
     cd $DEVELDIR
     svn checkout http://closure-library.googlecode.com/svn/trunk/ closure-library
     curl -O http://closure-compiler.googlecode.com/files/compiler-20120430.zip
@@ -81,11 +75,3 @@ Now that we have built Share.js we need to do two modifications: 1) we need to a
     git apply $DEVELDIR/FluidWebFS/docs/installation/browserchannel-makefile.patch
     cake webclient
     make
-
-In our tests the last commit in the node-browserchannel Git repos was this:
-
-    commit 7522e83ff0e140b823fe899a7a44641c0657f988
-    Author: Joseph <josephg@gmail.com>
-    Date:   Sat May 12 12:10:39 2012 +1000
-
-The Closure Library was checked out at revision __1961__.
