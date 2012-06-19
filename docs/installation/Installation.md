@@ -22,7 +22,7 @@ For now FluidWebFS's source resides in Mads's DAIMI homedir. In order to check i
     export DEVELDIR=/some/path/where/you/store/source/code
     mkdir -p $DEVELDIR
     cd $DEVELDIR
-    git clone ssh://fh.cs.au.dk/users/madsk/git/FluidWebFS.git
+    git clone https://github.com/hci-au-dk/FluidWebFS.git
 
 I assume that __$DEVELDIR__ is a valid directory path. You can substitute it with whatever you like.
 
@@ -59,7 +59,7 @@ Some dependencies must be built from source. This goes e.g., for Share.js.
 Now that we have built Share.js we need to modify its browserchannel dependency.
 
     cd $DEVELDIR/FluidWebFS/node_modules/share/node_modules
-    rm -rf browserchannel
+    sudo rm -rf browserchannel
     git clone https://github.com/hci-au-dk/node-browserchannel.git browserchannel
 
 The above should do the trick, but if it doesn't work you may have to apply some more patches (these should be included in what you just checked out, but the following patching process is kept here for reference if an error occurs).
