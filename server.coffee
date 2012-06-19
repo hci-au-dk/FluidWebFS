@@ -70,9 +70,9 @@ class HTTPSServer
         # Add a custom body parser that also buffers the raw body of the request if needed.
         @server.use (req, res, next) ->
             data = ''
-            req.setEncoding 'utf8'
+            req.setEncoding 'binary'
             req.on 'data', (chunk) ->
-                data += chunk
+                data += chunk.toString('binary')
             req.on 'end', () ->
                 # Check whether content is json - and parse it if it is.
                 if req.headers['content-type']?
@@ -82,6 +82,8 @@ class HTTPSServer
                                 req.body = JSON.parse data
                             catch error
                                 console.log 'Error parsing body as JSON.', error
+                        else if content_type.replace(/^\ +/g, '') == 'application/octet-stream'
+                            req.raw_body = data
                 else
                     # Store the raw body.
                     req.raw_body = data
