@@ -53,7 +53,7 @@
 				$('#input').click(function() {
 					var send = $("#form").formToJSON();
 					$.ajax({
-						url: "http://" + window.location.hostname + ":8001/authenticate",
+						url: "https://" + window.location.hostname + ":8001/authenticate",
 						type: "POST",
 						data: send,
 						error: function(xhr, error) {
