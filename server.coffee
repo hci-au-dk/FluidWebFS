@@ -367,7 +367,7 @@ class HTTPSServer
                         else
                             if (metadata['is_dir'])
                                 # Get directory listing
-                                callback metadata['contents'], null
+                                callback { type: 'aplication/json', data: metadata['contents'] }, null
                             else
                                 # Get file contents.
                                 userDbox.readFile path, (error, reply) ->
