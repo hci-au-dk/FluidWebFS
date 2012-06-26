@@ -339,6 +339,7 @@ class HTTPSServer
         @accessFileStore accessType, req.params.username, req.params[0], data, (doc, error) ->
             if error
                 console.log error
+                res.header('Content-Type', 'text/plain')
                 res.send error, 500
             else
                 res.header('Content-Type', doc.type)
@@ -382,7 +383,7 @@ class HTTPSServer
                         if error
                             callback null, error
                         else
-                            callback reply, null
+                            callback { type:'application/json', data: reply }, null
 
                 # UNLINK (remove)
                 else if accessType == 'unlink'
@@ -390,7 +391,7 @@ class HTTPSServer
                         if error
                             callback null, error
                         else
-                            callback reply, null
+                            callback { type:'application/json', data: reply }, null
 
                 # MKDIR
                 else if accessType == 'mkdir'
@@ -398,7 +399,7 @@ class HTTPSServer
                         if error
                             callback null, error
                         else
-                            callback reply, null
+                            callback { type:'application/json', data: reply }, null
             else
                 callback null, "User has no active store"
 
