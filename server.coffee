@@ -24,11 +24,9 @@ class HTTPSServer
             key : fs.readFileSync(key_file),
             cert : fs.readFileSync(cert_file)
         }
-        # TODO: https is disabled here!
-#        @server = express.createServer(options)
-        @server = express.createServer()
+        @server = express.createServer(options)
         @server.use (req, res, next) ->
-            res.header 'Access-Control-Allow-Origin', 'http://saturn.local:8000'
+            res.header 'Access-Control-Allow-Origin', 'http://localhost:8000'
             res.header 'Access-Control-Allow-Credentials', 'true'
             res.header 'Access-Control-Allow-Headers', 'Content-Type'
             next()
@@ -343,7 +341,8 @@ class HTTPSServer
                 console.log error
                 res.send error, 500
             else
-                res.send doc
+                res.header('Content-Type', doc.type)
+                res.send doc.data
 
     accessFileStore: (accessType, username, path, data, callback) ->
         # Connect to that user's dbox store.
@@ -375,7 +374,7 @@ class HTTPSServer
                                     if error
                                         callback null, error
                                     else
-                                        callback reply, null
+                                        callback { type: metadata['mime_type'], data: reply }, null
 
                 # WRITE
                 else if accessType == 'write' or accessType == 'write-raw'
