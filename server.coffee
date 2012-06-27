@@ -100,6 +100,9 @@ class HTTPSServer
         # Test code.
         @server.use(express.static(__dirname + '/test/sharetest')) #DEBUG
 
+        @server.get '/ping', (req, res) =>
+            res.write('pong')
+        
         # Open a file (sharejs)
         @server.get '/open/:username/*', (req, res) =>
             # Create a sharejs path.
