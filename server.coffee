@@ -18,13 +18,20 @@ sessionStore = new RedisStore
 userdb = new userdb.UserDB()
 
 class HTTPSServer
-    constructor: (key_file, cert_file) ->
+    constructor: () ->
+        # Load the configuration.
+        @config = JSON.parse(fs.readFileSync('config.json', 'utf8'))
+
         @userdb = userdb
+
+        # Set options for https
         options = {
-            key : fs.readFileSync(key_file),
-            cert : fs.readFileSync(cert_file)
+            key : fs.readFileSync(@config.keyFile),
+            cert : fs.readFileSync(@config.certFile)
         }
         @server = express.createServer(options)
+
+        # Configuration of the http(s) server
         @server.use (req, res, next) ->
             res.header 'Access-Control-Allow-Origin', 'http://localhost:8000'
             res.header 'Access-Control-Allow-Credentials', 'true'
@@ -52,14 +59,14 @@ class HTTPSServer
             pathTokens.splice(0, 1)
             path = pathTokens.join('/')
 
-            @accessFileStore 'read', owner, path, null, (fileData, error) =>
+            @accessFileStore 'read', owner, path, null, (doc, error) =>
                 if error
                     console.log 'Error reading preload data' + error #DEBUG
                     callback error, null
                 else
                     console.log 'Read preload data.' #DEBUG
                     @shareBufferState[docName] = null
-                    callback null, fileData.toString('utf8') #TODO - encoding may be wrong here!
+                    callback null, doc.data.toString('utf8')
 
         @server.model.on 'applyOp', (docName, opData, snapshot, oldSnapshot) =>
             console.log 'applyOp', docName #DEBUG
@@ -260,31 +267,6 @@ class HTTPSServer
                     else
                         console.log "you're golden!" #DEBUG
                         action.accept()
-
-
-
-                    # Try to preload the data into the sharejs buffer.
-#                    console.log "Trying to load data into", action.docName #DEBUG
-#                    shareclient.open action.docName, 'text', 'http://localhost:8001/doc', (error, doc) =>
-#                        console.log "hest!" #DEBUG
-#                        if error
-#                            console.log error
-#                            action.reject()
-#                        else
-#                            console.log "foo" #DEBUG
-#                            @accessFileStore 'read', username, path, null, (fileData, error2) ->
-#                                if error2
-#                                    console.log error2
-#                                    action.reject()
-#                                else
-#                                    console.log "woooot" #DEBUG
-#                                    doc.submitOp {i:fileData, p:0}
-#                                    doc.close()
-#
-#                                    # Everything checked out - accept this connection.
-#                                    console.log "User", username, "accessed document", path, "with rights", wantRights
-#                                    action.accept()
-
 
 
     authenticate: (username, password, cb) ->

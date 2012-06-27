@@ -1,4 +1,6 @@
 {
 	"appkey" : "wv1lb4rp6x4280f", 
-	"appsecret" : "ia5jqlr9qtek0sc"
+	"appsecret" : "ia5jqlr9qtek0sc",
+    "keyFile" : "ssl/server.key",
+    "certFile" : "ssl/server.crt"
 }
