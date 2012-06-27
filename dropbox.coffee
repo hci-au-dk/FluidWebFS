@@ -25,7 +25,8 @@ class DboxServer
                 cb null, reply
 
     writeFile: (path, content, cb) ->
-        @client.put path, content, (status, reply) ->
+        data = new Buffer(content, 'binary')
+        @client.put path, data, (status, reply) ->
             if status != 200
                 cb reply, null
             else
