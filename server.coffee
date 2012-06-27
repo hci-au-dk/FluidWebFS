@@ -33,7 +33,7 @@ class HTTPSServer
 
         # Configuration of the http(s) server
         @server.use (req, res, next) ->
-            res.header 'Access-Control-Allow-Origin', 'http://localhost:8000'
+            res.header 'Access-Control-Allow-Origin', 'https://localhost:8000'
             res.header 'Access-Control-Allow-Credentials', 'true'
             res.header 'Access-Control-Allow-Headers', 'Content-Type'
             next()
