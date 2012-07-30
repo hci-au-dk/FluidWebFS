@@ -36,6 +36,7 @@ class HTTPSServer
             res.header 'Access-Control-Allow-Origin', 'https://localhost:8000'
             res.header 'Access-Control-Allow-Credentials', 'true'
             res.header 'Access-Control-Allow-Headers', 'Content-Type'
+            res.header 'Access-Control-Expose-Headers', 'ETag'
             next()
         @server.use(express.cookieParser())
         @server.use(express.session({ store: sessionStore, secret: "monster truck" }))
@@ -101,7 +102,8 @@ class HTTPSServer
         @server.use(express.static(__dirname + '/test/sharetest')) #DEBUG
 
         @server.get '/ping', (req, res) =>
-            res.write('pong')
+            console.log "Got ping"
+            res.send({'success' : true})
         
         # Open a file (sharejs)
         @server.get '/open/:username/*', (req, res) =>
